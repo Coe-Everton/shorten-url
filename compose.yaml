@@ -1,0 +1,15 @@
+﻿services:
+  shortenurl:
+    image: shortenurl
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+      dockerfile: ShortenUrl/Dockerfile
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ShortenUrlUser
+      MONGO_INITDB_ROOT_PASSWORD: ShortenUrlPassword

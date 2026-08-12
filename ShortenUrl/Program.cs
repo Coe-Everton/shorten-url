@@ -1,0 +1,23 @@
+using ShortenUrl.Configs;
+using ShortenUrl.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+builder.Services.AddScoped<IValidateUrlSerivce, ValidateUrlService>();
+builder.Services.AddScoped<IInsertUrl, InsertUrl>();
+builder.Services.AddOpenApi();
+builder.Services.AddSingleton<MongoDbService>();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
+
+app.UseHttpsRedirection();
+
+app.MapControllers();
+
+app.Run();
