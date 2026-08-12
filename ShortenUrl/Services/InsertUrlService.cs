@@ -6,12 +6,12 @@ using ShortenUrl.Entities;
 
 namespace ShortenUrl.Services;
 
-public class InsertUrl: IInsertUrl
+public class InsertUrlService: IInsertUrl
 {
     private readonly IMongoCollection<Urls>? _urls;
     private readonly IValidateUrlSerivce _validateUrlService;
 
-    public InsertUrl(MongoDbService mongoDbService, IValidateUrlSerivce validateUrlService)
+    public InsertUrlService(MongoDbService mongoDbService, IValidateUrlSerivce validateUrlService)
     {
         _urls = mongoDbService.Database?.GetCollection<Urls>("Urls");
         _validateUrlService = validateUrlService;
