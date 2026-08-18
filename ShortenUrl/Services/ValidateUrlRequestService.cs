@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace ShortenUrl.Services;
 
-public class ValidateUrlService: IValidateUrlSerivce
+public class ValidateUrlRequestService: IValidateUrlSerivce
 {
     public bool ValidateUrl(string url)
     {

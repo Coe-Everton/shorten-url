@@ -10,11 +10,13 @@ public class InsertUrlService: IInsertUrl
 {
     private readonly IMongoCollection<Urls>? _urls;
     private readonly IValidateUrlSerivce _validateUrlService;
+    private readonly ICreateShortenUrl _createShortenUrlService;
 
-    public InsertUrlService(MongoDbService mongoDbService, IValidateUrlSerivce validateUrlService)
+    public InsertUrlService(MongoDbService mongoDbService, IValidateUrlSerivce validateUrlService,  ICreateShortenUrl createShortenUrlService)
     {
         _urls = mongoDbService.Database?.GetCollection<Urls>("Urls");
         _validateUrlService = validateUrlService;
+        _createShortenUrlService = createShortenUrlService;
     }
     
     public async Task<Urls?> Execute(ShortenUrlResquet request)
@@ -28,11 +30,12 @@ public class InsertUrlService: IInsertUrl
         {
             Id = Guid.CreateVersion7().ToString(),
             Url = request.url,
-            ShortUrl = "teste",
+            ShortUrl = await _createShortenUrlService.GeneratedShortenUrl(),
             ExpiresDate = DateTime.UtcNow.AddHours(1)
         };
         
         await _urls.InsertOneAsync(newUrl);
+        
         return newUrl;
     }
 }

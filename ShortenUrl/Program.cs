@@ -4,8 +4,10 @@ using ShortenUrl.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddScoped<IValidateUrlSerivce, ValidateUrlService>();
+builder.Services.AddScoped<IValidateUrlSerivce, ValidateUrlRequestService>();
 builder.Services.AddScoped<IInsertUrl, InsertUrlService>();
+builder.Services.AddScoped<ICreateShortenUrl, CreateShortenUrlService>();
+builder.Services.AddScoped<IVerifyShortenUrlExisty, VerifyShortenUrlExistyService>();
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<MongoDbService>();
 
