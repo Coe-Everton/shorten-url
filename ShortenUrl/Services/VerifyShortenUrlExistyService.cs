@@ -1,22 +1,23 @@
 using MongoDB.Driver;
 using ShortenUrl.Configs;
 using ShortenUrl.Entities;
+using ShortenUrl.Repositoryies.Interfaces;
 
 namespace ShortenUrl.Services;
 
 public class VerifyShortenUrlExistyService : IVerifyShortenUrlExisty
 {
-    private  readonly IMongoCollection<Urls>?  _urls;
+    private readonly IUrls _UrlsrRepository;
 
-    public VerifyShortenUrlExistyService(MongoDbService mongoDbService)
+    public VerifyShortenUrlExistyService(IUrls urlsrRepository)
     {
-        _urls = mongoDbService.Database?.GetCollection<Urls>("Urls");
+        _UrlsrRepository = urlsrRepository;
     }
 
     public async Task<bool> VerifyUrl(string shortenUrl)
     {
-        var result = await _urls.Find(x => x.ShortUrl == shortenUrl).FirstOrDefaultAsync();
-
+        var result = _UrlsrRepository.ValidateExistyShortenUrl(shortenUrl);
+        
         if (result is not null)
         {
             return true;

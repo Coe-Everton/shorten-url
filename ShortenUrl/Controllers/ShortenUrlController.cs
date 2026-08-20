@@ -37,15 +37,11 @@ namespace ShortenUrl.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<Urls>> GetAllUrls()
-        {
-            return await _urls.Find(FilterDefinition<Urls>.Empty).ToListAsync();
-        }
-
         [HttpGet("{id}")]
         public async Task<ActionResult<Urls>> GetUrlById(string id)
         {
+            
+            
             var filter = Builders<Urls>.Filter.Eq(x => x.Id, id);
             var urls = await _urls.Find(filter).FirstOrDefaultAsync();
             return urls is not null ? Ok(urls) : NotFound();
