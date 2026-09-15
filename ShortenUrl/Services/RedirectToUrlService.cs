@@ -1,26 +1,26 @@
 using Microsoft.AspNetCore.Http.HttpResults;
+using ShortenUrl.Entities;
+using ShortenUrl.Repositoryies.Interfaces;
 
 namespace ShortenUrl.Services;
 
 public class RedirectToUrlService : IRedirectToUrl
 {
-    private readonly IVerifyShortenUrlExisty _verifyShortenUrlExistyService;
+    private readonly IUrls _urlsRepository;
     
-    public RedirectToUrlService(IVerifyShortenUrlExisty verifyShortenUrlExisty)
+    public RedirectToUrlService(IUrls urlsRepository)
     {
-        _verifyShortenUrlExistyService =  verifyShortenUrlExisty;
+        _urlsRepository =  urlsRepository;
     }
 
-    public async Task<bool> RedirectToUrl(string ShortenUrl)
+    public async Task<Urls?> Execute(string ShortenUrl)
     {
-        var existy = await _verifyShortenUrlExistyService.VerifyUrl(ShortenUrl);
-        if (existy)
+        var url = await _urlsRepository.GetShortenUrl(ShortenUrl);
+        
+        if(url is null)
         {
-            return false;
+            return null;
         }
-        
-        
-        
-        return true;
+        return url;
     }
 }

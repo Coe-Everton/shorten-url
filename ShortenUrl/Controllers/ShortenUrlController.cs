@@ -5,6 +5,7 @@ using ShortenUrl.Configs;
 using ShortenUrl.Dtos;
 using ShortenUrl.Entities;
 using ShortenUrl.Services;
+using ShortenUrl.Errors;
 
 namespace ShortenUrl.Controllers
 {
@@ -14,45 +15,44 @@ namespace ShortenUrl.Controllers
     {
         private readonly IMongoCollection<Urls>? _urls;
         private readonly IInsertUrl _insertUrl;
+        private readonly IRedirectToUrl _redirectToUrl;
 
         public ShortenUrlController(
             MongoDbService mongoDbService,
-            IInsertUrl insertUrl
+            IInsertUrl insertUrl,
+            IRedirectToUrl redirectToUrl
         )
         {
             _urls = mongoDbService.Database.GetCollection<Urls>("Urls");
             _insertUrl = insertUrl;
+            _redirectToUrl = redirectToUrl;
         }
             
         [HttpPost]
-        public async Task<ActionResult>  ShortenUrl([FromBody] ShortenUrlResquet request)
+        public async Task<ObjectResult> ShortenUrl([FromBody] ShortenUrlResquet request)
         {
             var response = await _insertUrl.Execute(request);
-
+            
             if (response is null)
             {
-                return BadRequest("Url is invalid");
+                return Result.Failure(ErrorsShortenUrl.ShortenUrlNotInserted);
             }
-            
-            return Ok(response);
+
+            return Result<Urls>.Sucess(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Urls>> GetUrlById(string id)
-        {
-            
-            
-            var filter = Builders<Urls>.Filter.Eq(x => x.Id, id);
-            var urls = await _urls.Find(filter).FirstOrDefaultAsync();
-            return urls is not null ? Ok(urls) : NotFound();
-        }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUrlById(string id)
+        public async Task<ActionResult> GetUrlById(string id)
         {
-            var filter = Builders<Urls>.Filter.Eq(x => x.Id, id);
-            await _urls.DeleteOneAsync(filter);
-            return Ok();
+            var redirect = await _redirectToUrl.Execute(id);
+            
+            if (redirect is null)
+            {
+                return Result.Failure(ErrorsShortenUrl.ShortenUrlNotFound);
+            }
+
+            return Redirect(redirect.Url);
         }
     }
 }

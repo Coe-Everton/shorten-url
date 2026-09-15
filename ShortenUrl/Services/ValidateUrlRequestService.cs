@@ -4,7 +4,7 @@ namespace ShortenUrl.Services;
 
 public class ValidateUrlRequestService: IValidateUrlSerivce
 {
-    public bool ValidateUrl(string url)
+    public bool Execute(string url)
     {
         Regex validateUrlRegex =
             new Regex(

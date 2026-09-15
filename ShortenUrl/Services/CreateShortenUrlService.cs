@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
+using ShortenUrl.Configs;
 
 namespace ShortenUrl.Services;
 
@@ -13,19 +14,14 @@ public class CreateShortenUrlService: ICreateShortenUrl
         _verifyShortenUrlExisty = verifyShortenUrlExisty;
     }
 
-    public async Task<string> GeneratedShortenUrl()
+    public async Task<string> Execute()
     {
         var result = RandomNumberGenerator.GetString(caracteres, 5);
 
-        var verify = await _verifyShortenUrlExisty.VerifyUrl(result);
-        
-        if (verify)
+        do
         {
-            GeneratedShortenUrl();
-        }
-        
-        Console.WriteLine("1");
-        Console.WriteLine(result);
+            result = RandomNumberGenerator.GetString(caracteres, 5);
+        } while (await _verifyShortenUrlExisty.Execute(result));
         
         return result;
     }

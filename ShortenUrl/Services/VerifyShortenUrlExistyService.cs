@@ -14,16 +14,9 @@ public class VerifyShortenUrlExistyService : IVerifyShortenUrlExisty
         _UrlsrRepository = urlsrRepository;
     }
 
-    public async Task<bool> VerifyUrl(string shortenUrl)
+    public async Task<bool> Execute(string shortenUrl)
     {
-        var result = _UrlsrRepository.ValidateExistyShortenUrl(shortenUrl);
-        
-        if (result is not null)
-        {
-            return true;
-        }
-        
-        return false;
+        return await _UrlsrRepository.ValidateExistyShortenUrl(shortenUrl);
     }
     
 }

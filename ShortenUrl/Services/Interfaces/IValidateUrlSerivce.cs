@@ -2,5 +2,5 @@ namespace ShortenUrl.Services;
 
 public interface IValidateUrlSerivce
 {
-    public bool ValidateUrl(string url);
+    public bool Execute(string url);
 }

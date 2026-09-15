@@ -26,7 +26,7 @@ public class UrlsRepository: IUrls
 
     public async Task<Urls> GetShortenUrl(string shortenUrl)
     {
-        var result = await _urls.Find(shortenUrl => shortenUrl == shortenUrl).FirstOrDefaultAsync();
+        var result = await _urls.Find(x => x.ShortUrl == shortenUrl).FirstOrDefaultAsync();
 
         return result;
     }

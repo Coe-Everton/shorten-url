@@ -22,20 +22,17 @@ public class InsertUrlService: IInsertUrl
     
     public async Task<Urls?> Execute(ShortenUrlResquet request)
     {
-        if (_validateUrlService.ValidateUrl(request.url))
+        if (_validateUrlService.Execute(request.url))
         {
             return null;
         }  
-        
-        var newUrl = new Urls()
-        {
+
+        var result = await _UrlsRepository.CreateUrl(new Urls{            
             Id = Guid.CreateVersion7().ToString(),
             Url = request.url,
-            ShortUrl = await _createShortenUrlService.GeneratedShortenUrl(),
-            ExpiresDate = DateTime.UtcNow.AddHours(1)
-        };
-
-        var result = await _UrlsRepository.CreateUrl(newUrl);
+            ShortUrl = await _createShortenUrlService.Execute(),
+            ExpiresDate = DateTime.UtcNow.AddDays(7)}
+        );
         
         return result;
     }

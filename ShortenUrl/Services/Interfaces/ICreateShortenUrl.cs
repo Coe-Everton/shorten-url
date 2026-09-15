@@ -2,6 +2,6 @@ namespace ShortenUrl.Services;
 
 public interface ICreateShortenUrl
 {
-    public Task<string> GeneratedShortenUrl();
+    public Task<string> Execute();
     
 }
