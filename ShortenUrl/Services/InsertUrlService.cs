@@ -22,7 +22,7 @@ public class InsertUrlService: IInsertUrl
     
     public async Task<Urls?> Execute(ShortenUrlResquet request)
     {
-        if (_validateUrlService.Execute(request.url))
+        if (!_validateUrlService.Execute(request.url))
         {
             return null;
         }  
